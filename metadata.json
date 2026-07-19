@@ -1,0 +1,6 @@
+{
+  "name": "Generative Web Synth",
+  "description": "An advanced synthesizer with an algorithmic melody/chord generator, wavetable and spectral voices, up to 16-voice unison with stereo spread, sub-oscillators, noise, SVF filtering, ADSR envelopes, and real-time canvas visualizers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
