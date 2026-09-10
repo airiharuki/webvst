@@ -54,26 +54,26 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
       
       {/* 1. FILTER CONTROLLER SECTION (4 Cols) */}
-      <div className="lg:col-span-4 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="filter-section">
+      <div className="lg:col-span-4 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="filter-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-3">
-            <span className="text-xs uppercase font-display font-bold text-emerald-400 tracking-wider flex items-center gap-1.5">
-              <Sliders className="w-4 h-4" />
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-[#FF3E00]" />
               State Variable Filter
             </span>
             <span className="text-[10px] font-mono text-zinc-500">SVF / CUTOFF</span>
           </div>
 
           {/* Filter Type Buttons */}
-          <div className="grid grid-cols-4 bg-zinc-950 p-1 rounded-lg border border-zinc-800/60 mb-4 text-[10px] font-mono font-medium text-zinc-400">
+          <div className="grid grid-cols-4 bg-black p-1 rounded border border-zinc-800 mb-4 text-[10px] font-mono font-medium text-zinc-400">
             {filterTypes.map((type) => (
               <button
                 key={type}
                 id={`filter-type-${type}`}
-                className={`py-1 rounded text-center transition-all ${
+                className={`py-1 rounded text-center transition-all cursor-pointer ${
                   params.filterType === type
-                    ? "bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/25"
+                    ? "bg-[#FF3E00]/10 text-[#FF3E00] font-bold border border-[#FF3E00]/20 shadow-[0_0_8px_#FF3E0044]"
                     : "hover:text-zinc-200 hover:bg-zinc-900"
                 }`}
                 onClick={() => onChange({ filterType: type })}
@@ -96,7 +96,7 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
             color="emerald"
             unit="Hz"
             onChange={(val) => onChange({ filterCutoff: val })}
-            displayFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${Math.round(v)}`}
+            displayFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(2)}kHz` : `${Math.round(v)}Hz`}
           />
           <Knob
             id="knob-filter-resonance"
@@ -111,7 +111,7 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
           />
           <Knob
             id="knob-filter-drive"
-            label="Drive Saturation"
+            label="Drive"
             value={params.filterDrive}
             min={1.0}
             max={4.0}
@@ -136,19 +136,19 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
       </div>
 
       {/* 2. AMPLITUDE ENVELOPE (ADSR) SECTION (4 Cols) */}
-      <div className="lg:col-span-4 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="amp-env-section">
+      <div className="lg:col-span-4 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="amp-env-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs uppercase font-display font-bold text-zinc-300 tracking-wider flex items-center gap-1.5">
-              <Eye className="w-4 h-4 text-cyan-400" />
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Eye className="w-3.5 h-3.5 text-[#00F2FF]" />
               Amplitude Envelope
             </span>
             <span className="text-[10px] font-mono text-zinc-500">AMP ADSR</span>
           </div>
 
           {/* SVG Shape Preview */}
-          <div className="bg-zinc-950/80 rounded-lg p-2 border border-zinc-900 h-16 flex items-center justify-center mb-4 relative overflow-hidden">
+          <div className="bg-black rounded p-2 border border-zinc-800 h-16 flex items-center justify-center mb-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-500/5 opacity-40 pointer-events-none" />
             <svg className="w-full h-full" viewBox="0 0 160 45">
               {/* Grid Lines */}
@@ -161,11 +161,11 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
               <path
                 d={ampPath}
                 fill="none"
-                stroke="rgb(34, 211, 238)"
-                strokeWidth="2"
+                stroke="#00F2FF"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="drop-shadow-[0_0_3px_rgba(6,182,212,0.6)]"
+                className="drop-shadow-[0_0_5px_#00F2FF]"
               />
             </svg>
           </div>
@@ -221,19 +221,19 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
       </div>
 
       {/* 3. FILTER ENVELOPE (ADSR) SECTION (4 Cols) */}
-      <div className="lg:col-span-4 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="filter-env-section">
+      <div className="lg:col-span-4 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="filter-env-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs uppercase font-display font-bold text-zinc-300 tracking-wider flex items-center gap-1.5">
-              <Eye className="w-4 h-4 text-emerald-400" />
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Eye className="w-3.5 h-3.5 text-[#FF3E00]" />
               Filter Envelope
             </span>
             <span className="text-[10px] font-mono text-zinc-500">FILT ADSR</span>
           </div>
 
           {/* SVG Shape Preview */}
-          <div className="bg-zinc-950/80 rounded-lg p-2 border border-zinc-900 h-16 flex items-center justify-center mb-4 relative overflow-hidden">
+          <div className="bg-black rounded p-2 border border-zinc-800 h-16 flex items-center justify-center mb-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-emerald-500/5 opacity-40 pointer-events-none" />
             <svg className="w-full h-full" viewBox="0 0 160 45">
               {/* Grid Lines */}
@@ -246,11 +246,11 @@ export default function FilterControls({ params, onChange }: FilterControlsProps
               <path
                 d={filterPath}
                 fill="none"
-                stroke="rgb(52, 211, 153)"
-                strokeWidth="2"
+                stroke="#FF3E00"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]"
+                className="drop-shadow-[0_0_5px_#FF3E00]"
               />
             </svg>
           </div>

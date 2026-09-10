@@ -53,7 +53,8 @@ export class AudioEngine {
     
     // Master Gain
     this.masterVolumeNode = this.ctx.createGain();
-    this.masterVolumeNode.gain.setValueAtTime(this.params.masterVolume / 100, this.ctx.currentTime);
+    const masterVol = isFinite(this.params.masterVolume) ? Math.max(0, Math.min(100, this.params.masterVolume)) : 80;
+    this.masterVolumeNode.gain.setValueAtTime(masterVol / 100, this.ctx.currentTime);
     
     // Master Analyser
     this.analyserNode = this.ctx.createAnalyser();
@@ -88,8 +89,9 @@ export class AudioEngine {
     
     // Update Master Volume
     if (this.ctx && this.masterVolumeNode) {
+      const masterVol = isFinite(this.params.masterVolume) ? Math.max(0, Math.min(100, this.params.masterVolume)) : 80;
       this.masterVolumeNode.gain.setTargetAtTime(
-        this.params.masterVolume / 100, 
+        masterVol / 100, 
         this.ctx.currentTime, 
         0.02
       );
@@ -139,10 +141,12 @@ export class AudioEngine {
     real[0] = 0;
     imag[0] = 0;
     
-    const morphScale = morph / 100; // 0 to 1
+    const safeMorph = isFinite(morph) ? Math.max(0, Math.min(100, morph)) : 0;
+    const morphScale = safeMorph / 100; // 0 to 1
+    const harmonicsList = Array.isArray(baseHarmonics) ? baseHarmonics : [];
     
     for (let i = 1; i < size; i++) {
-      const originalAmt = baseHarmonics[i - 1] !== undefined ? baseHarmonics[i - 1] : 0;
+      const originalAmt = harmonicsList[i - 1] !== undefined && isFinite(harmonicsList[i - 1]) ? harmonicsList[i - 1] : 0;
       
       // Spectral morphing changes the harmonic profile dynamically:
       // High morph values boost odd harmonics, or cause a phase/frequency shifting comb-like pattern.
@@ -160,7 +164,7 @@ export class AudioEngine {
       }
       
       // Imaginary is Sine, Real is Cosine. We use Sine (imaginary) coefficients for a traditional phase.
-      imag[i] = morphedAmt;
+      imag[i] = isFinite(morphedAmt) ? morphedAmt : 0;
       real[i] = 0;
     }
     
@@ -171,11 +175,13 @@ export class AudioEngine {
   private createShaperTable(driveValue: number): Float32Array {
     const samples = 44100;
     const curve = new Float32Array(samples);
+    const drive = isFinite(driveValue) && driveValue > 0.001 ? driveValue : 1.0;
+    const denom = Math.tanh(drive);
     // Standard tanh waveshaper formula
     for (let i = 0; i < samples; ++i) {
       const x = (i * 2) / samples - 1;
       // Boost the gain before saturating to create overdrive
-      curve[i] = Math.tanh(x * driveValue) / Math.tanh(driveValue);
+      curve[i] = Math.tanh(x * drive) / denom;
     }
     return curve;
   }
@@ -198,7 +204,8 @@ export class AudioEngine {
     let initialFreq = freq;
     let glideActive = false;
     
-    if (this.params.glideTime > 0 && this.lastPlayedMidi !== null && this.activeNotes.size > 0) {
+    const glideTime = isFinite(this.params.glideTime) ? this.params.glideTime : 0;
+    if (glideTime > 0 && this.lastPlayedMidi !== null && this.activeNotes.size > 0) {
       initialFreq = this.midiNoteToFrequency(this.lastPlayedMidi);
       glideActive = true;
     }
@@ -214,11 +221,13 @@ export class AudioEngine {
     // 2. Filter Node (BiquadFilter)
     const filterNode = this.ctx.createBiquadFilter();
     filterNode.type = this.params.filterType;
-    filterNode.Q.setValueAtTime(this.params.filterResonance, now);
+    const filterRes = isFinite(this.params.filterResonance) ? Math.max(0.0001, this.params.filterResonance) : 1.0;
+    filterNode.Q.setValueAtTime(filterRes, now);
     
     // 3. Drive WaveShaper Node
     const shaperNode = this.ctx.createWaveShaper();
-    shaperNode.curve = this.createShaperTable(this.params.filterDrive);
+    const filterDrive = isFinite(this.params.filterDrive) ? Math.max(1.0, this.params.filterDrive) : 1.0;
+    shaperNode.curve = this.createShaperTable(filterDrive);
     shaperNode.oversample = "4x";
 
     // Connection chain: Voice Mixer -> Filter -> Drive Shaper -> Master Volume
@@ -229,9 +238,9 @@ export class AudioEngine {
     const unisonOscs: OscillatorNode[] = [];
     const unisonPanners: StereoPannerNode[] = [];
     
-    const numVoices = Math.max(1, Math.min(16, this.params.unisonVoices));
-    const detuneAmt = this.params.unisonDetune; // 0 to 100 cents
-    const stereoSpread = this.params.unisonSpread / 100; // 0 to 1
+    const numVoices = isFinite(this.params.unisonVoices) ? Math.max(1, Math.min(16, this.params.unisonVoices)) : 1;
+    const detuneAmt = isFinite(this.params.unisonDetune) ? Math.max(0, this.params.unisonDetune) : 10;
+    const stereoSpread = isFinite(this.params.unisonSpread) ? Math.max(0, Math.min(100, this.params.unisonSpread)) / 100 : 0.5;
 
     // Build Custom Periodic Wave if using Wavetable or Spectral
     let customWave: PeriodicWave | null = null;
@@ -269,17 +278,22 @@ export class AudioEngine {
       }
 
       // Configure Frequency and Detune
-      osc.frequency.setValueAtTime(initialFreq, now);
-      osc.detune.setValueAtTime(detuneCents, now);
+      const safeInitialFreq = isFinite(initialFreq) && initialFreq > 0 ? initialFreq : 440;
+      const safeTargetFreq = isFinite(targetFreq) && targetFreq > 0 ? targetFreq : 440;
+      const safeDetuneCents = isFinite(detuneCents) ? detuneCents : 0;
+      const safePanValue = isFinite(panValue) ? Math.max(-1, Math.min(1, panValue)) : 0;
+
+      osc.frequency.setValueAtTime(safeInitialFreq, now);
+      osc.detune.setValueAtTime(safeDetuneCents, now);
       
       if (glideActive) {
-        const glideSeconds = this.params.glideTime / 1000;
-        osc.frequency.exponentialRampToValueAtTime(targetFreq, now + glideSeconds);
+        const glideSeconds = isFinite(glideTime) ? Math.max(0.001, glideTime / 1000) : 0.001;
+        osc.frequency.exponentialRampToValueAtTime(safeTargetFreq, now + glideSeconds);
       }
 
       // Create Stereo Panner for width
       const panner = this.ctx.createStereoPanner();
-      panner.pan.setValueAtTime(panValue, now);
+      panner.pan.setValueAtTime(safePanValue, now);
       
       // Connections: Osc -> Panner -> Voice Gain Node
       osc.connect(panner);
@@ -297,16 +311,21 @@ export class AudioEngine {
       subOsc = this.ctx.createOscillator();
       subOsc.type = this.params.subOscType.toLowerCase() as OscillatorType;
       
-      const subOctaveFactor = this.params.subOctave === -1 ? 0.5 : 0.25;
-      subOsc.frequency.setValueAtTime(initialFreq * subOctaveFactor, now);
+      const subOctave = this.params.subOctave === -1 || this.params.subOctave === -2 ? this.params.subOctave : -1;
+      const subOctaveFactor = subOctave === -1 ? 0.5 : 0.25;
+      const safeSubInitialFreq = isFinite(initialFreq) && initialFreq > 0 ? initialFreq * subOctaveFactor : 220;
+      const safeSubTargetFreq = isFinite(targetFreq) && targetFreq > 0 ? targetFreq * subOctaveFactor : 220;
+
+      subOsc.frequency.setValueAtTime(safeSubInitialFreq, now);
       
       if (glideActive) {
-        const glideSeconds = this.params.glideTime / 1000;
-        subOsc.frequency.exponentialRampToValueAtTime(targetFreq * subOctaveFactor, now + glideSeconds);
+        const glideSeconds = isFinite(glideTime) ? Math.max(0.001, glideTime / 1000) : 0.001;
+        subOsc.frequency.exponentialRampToValueAtTime(safeSubTargetFreq, now + glideSeconds);
       }
       
       const subGainNode = this.ctx.createGain();
-      subGainNode.gain.setValueAtTime((this.params.subVolume / 100) * 0.45, now); // Scale sub oscillator safely
+      const subVol = isFinite(this.params.subVolume) ? Math.max(0, Math.min(100, this.params.subVolume)) : 30;
+      subGainNode.gain.setValueAtTime((subVol / 100) * 0.45, now); // Scale sub oscillator safely
       
       subOsc.connect(subGainNode);
       subGainNode.connect(voiceGainNode);
@@ -315,13 +334,14 @@ export class AudioEngine {
 
     // --- NOISE GENERATOR SETUP ---
     let noiseSource: AudioBufferSourceNode | null = null;
-    if (this.params.noiseVolume > 0) {
+    const noiseVol = isFinite(this.params.noiseVolume) ? Math.max(0, Math.min(100, this.params.noiseVolume)) : 0;
+    if (noiseVol > 0) {
       noiseSource = this.ctx.createBufferSource();
       noiseSource.buffer = this.params.noiseColor === "white" ? this.whiteNoiseBuffer : this.pinkNoiseBuffer;
       noiseSource.loop = true;
       
       const noiseGainNode = this.ctx.createGain();
-      noiseGainNode.gain.setValueAtTime((this.params.noiseVolume / 100) * 0.12, now); // Sane noise volume
+      noiseGainNode.gain.setValueAtTime((noiseVol / 100) * 0.12, now); // Sane noise volume
       
       noiseSource.connect(noiseGainNode);
       noiseGainNode.connect(voiceGainNode);
@@ -334,9 +354,9 @@ export class AudioEngine {
     // --- ENVELOPE MODULATION TRIGGERS ---
 
     // 1. AMPLITUDE ADSR ENVELOPE
-    const ampA = Math.max(0.001, this.params.ampAttack);
-    const ampD = Math.max(0.01, this.params.ampDecay);
-    const ampS = this.params.ampSustain / 100; // 0.0 to 1.0
+    const ampA = isFinite(this.params.ampAttack) ? Math.max(0.001, this.params.ampAttack) : 0.005;
+    const ampD = isFinite(this.params.ampDecay) ? Math.max(0.01, this.params.ampDecay) : 0.3;
+    const ampS = isFinite(this.params.ampSustain) ? Math.max(0, Math.min(100, this.params.ampSustain)) / 100 : 0.5;
     const maxGain = 0.25 * velocityScale; // Sane polyphony ceiling to prevent digital distortion
 
     // Attack Stage
@@ -346,14 +366,15 @@ export class AudioEngine {
     voiceGainNode.gain.setTargetAtTime(maxGain * ampS, now + ampA, ampD / 3);
 
     // 2. FILTER CUTOFF ADSR ENVELOPE
-    const filtA = Math.max(0.001, this.params.filterAttack);
-    const filtD = Math.max(0.01, this.params.filterDecay);
-    const filtS = this.params.filterSustain / 100; // 0.0 to 1.0
+    const filtA = isFinite(this.params.filterAttack) ? Math.max(0.001, this.params.filterAttack) : 0.01;
+    const filtD = isFinite(this.params.filterDecay) ? Math.max(0.01, this.params.filterDecay) : 0.5;
+    const filtS = isFinite(this.params.filterSustain) ? Math.max(0, Math.min(100, this.params.filterSustain)) / 100 : 0.5;
     
-    const baseCutoff = Math.max(20, Math.min(20000, this.params.filterCutoff));
+    const baseCutoff = isFinite(this.params.filterCutoff) ? Math.max(20, Math.min(20000, this.params.filterCutoff)) : 1000;
     // Envelope modulation depth mapping
     // Can go up to 20,000 Hz or down to 20 Hz
-    const envAmtHz = (this.params.filterEnvAmt / 100) * 12000; 
+    const filterEnvAmt = isFinite(this.params.filterEnvAmt) ? this.params.filterEnvAmt : 0;
+    const envAmtHz = (filterEnvAmt / 100) * 12000; 
     const peakCutoff = Math.max(20, Math.min(20000, baseCutoff + envAmtHz));
     const sustainCutoff = Math.max(20, Math.min(20000, baseCutoff + envAmtHz * filtS));
 
@@ -394,15 +415,17 @@ export class AudioEngine {
     note.voiceGainNode.gain.cancelScheduledValues(now);
     note.filterNode.frequency.cancelScheduledValues(now);
 
-    // 1. AMPLITUDE RELEASE
-    const ampR = Math.max(0.01, this.params.ampRelease);
-    note.voiceGainNode.gain.setValueAtTime(note.voiceGainNode.gain.value, now);
-    note.voiceGainNode.gain.exponentialRampToValueAtTime(0.0001, now + ampR); // ramp to near-zero exponential
+    // 1. AMPLITUDE RELEASE (Using linear ramp which is safe to start from 0 and end at 0)
+    const ampR = isFinite(this.params.ampRelease) ? Math.max(0.01, this.params.ampRelease) : 0.1;
+    const currentGain = isFinite(note.voiceGainNode.gain.value) ? Math.max(0, note.voiceGainNode.gain.value) : 0;
+    note.voiceGainNode.gain.setValueAtTime(currentGain, now);
+    note.voiceGainNode.gain.linearRampToValueAtTime(0, now + ampR);
 
-    // 2. FILTER RELEASE
-    const filtR = Math.max(0.01, this.params.filterRelease);
-    const baseCutoff = Math.max(20, Math.min(20000, this.params.filterCutoff));
-    note.filterNode.frequency.setValueAtTime(note.filterNode.frequency.value, now);
+    // 2. FILTER RELEASE (Exponential ramp ensuring both start and end frequencies are positive >= 20)
+    const filtR = isFinite(this.params.filterRelease) ? Math.max(0.01, this.params.filterRelease) : 0.2;
+    const baseCutoff = isFinite(this.params.filterCutoff) ? Math.max(20, Math.min(20000, this.params.filterCutoff)) : 1000;
+    const currentFreq = isFinite(note.filterNode.frequency.value) ? Math.max(20, note.filterNode.frequency.value) : 20;
+    note.filterNode.frequency.setValueAtTime(currentFreq, now);
     note.filterNode.frequency.exponentialRampToValueAtTime(Math.max(20, baseCutoff), now + filtR);
 
     // Cleanup nodes completely after the release phase is fully completed
@@ -480,6 +503,7 @@ export class AudioEngine {
 
   // Helper: converts MIDI pitch to Frequency (Hz)
   private midiNoteToFrequency(note: number): number {
-    return 440 * Math.pow(2, (note - 69) / 12);
+    const safeNote = isFinite(note) ? note : 60;
+    return 440 * Math.pow(2, (safeNote - 69) / 12);
   }
 }

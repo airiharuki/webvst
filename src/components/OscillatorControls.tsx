@@ -72,27 +72,27 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
       
-      {/* 1. MAIN OSCILLATOR COCKPIT (6 Cols) */}
-      <div className="lg:col-span-7 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="main-osc-section">
+      {/* 1. MAIN OSCILLATOR COCKPIT (7 Cols) */}
+      <div className="lg:col-span-7 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="main-osc-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-3">
-            <span className="text-xs uppercase font-display font-bold text-cyan-400 tracking-wider flex items-center gap-1.5">
-              <Zap className="w-4 h-4" />
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-[#00F2FF]" />
               Main Oscillator
             </span>
             <span className="text-[10px] font-mono text-zinc-500">VOICE ENGINE</span>
           </div>
 
           {/* Type Selector Tabs */}
-          <div className="grid grid-cols-6 bg-zinc-950 p-1 rounded-lg border border-zinc-800/60 mb-4 text-[10px] font-mono font-medium text-zinc-400">
+          <div className="grid grid-cols-6 bg-black p-1 rounded border border-zinc-800 mb-4 text-[10px] font-mono font-medium text-zinc-400">
             {oscTypes.map((type) => (
               <button
                 key={type}
                 id={`osc-type-${type.toLowerCase()}`}
-                className={`py-1.5 px-1 rounded transition-all text-center ${
+                className={`py-1.5 px-1 rounded transition-all text-center cursor-pointer ${
                   params.mainOscType === type
-                    ? "bg-cyan-500/10 text-cyan-400 font-bold border border-cyan-500/25"
+                    ? "bg-[#00F2FF]/10 text-[#00F2FF] font-bold border border-[#00F2FF]/20 shadow-[0_0_8px_#00F2FF44]"
                     : "hover:text-zinc-200 hover:bg-zinc-900"
                 }`}
                 onClick={() => onChange({ mainOscType: type })}
@@ -103,7 +103,7 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
           </div>
 
           {/* Interactive Harmonics Draw / Custom Periodic wave */}
-          <div className="bg-zinc-950 rounded-lg p-3 border border-zinc-800/50 mb-3">
+          <div className="bg-black rounded p-3 border border-zinc-800 mb-3">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[9px] font-mono text-zinc-500 tracking-wider uppercase">
                 {params.mainOscType === "Wavetable" || params.mainOscType === "Spectral"
@@ -116,28 +116,28 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
                 <button
                   id="harm-shortcut-sine"
                   onClick={() => setHarmonicsProfile("sine")}
-                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors"
+                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors cursor-pointer"
                 >
                   Sine
                 </button>
                 <button
                   id="harm-shortcut-saw"
                   onClick={() => setHarmonicsProfile("saw")}
-                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors"
+                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors cursor-pointer"
                 >
                   Saw
                 </button>
                 <button
                   id="harm-shortcut-sq"
                   onClick={() => setHarmonicsProfile("square")}
-                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors"
+                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors cursor-pointer"
                 >
                   Square
                 </button>
                 <button
                   id="harm-shortcut-tri"
                   onClick={() => setHarmonicsProfile("triangle")}
-                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors"
+                  className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 rounded hover:bg-zinc-800 transition-colors cursor-pointer"
                 >
                   Tri
                 </button>
@@ -158,13 +158,13 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
                     onMouseMove={(e) => handleHarmonicInteraction(e, idx)}
                     onTouchStart={(e) => handleHarmonicInteraction(e, idx)}
                     onTouchMove={(e) => handleHarmonicInteraction(e, idx)}
-                    className="relative flex-1 h-full bg-zinc-900 border border-zinc-800/40 rounded flex flex-col justify-end cursor-pointer group"
+                    className="relative flex-1 h-full bg-[#0A0A0B] border border-zinc-900 rounded flex flex-col justify-end cursor-pointer group"
                   >
                     {/* Filling Column */}
                     <div
                       className={`w-full rounded-t transition-all ${
                         isActiveDraw
-                          ? "bg-cyan-500 group-hover:bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.4)]"
+                          ? "bg-[#00F2FF] group-hover:bg-cyan-300 shadow-[0_0_8px_#00F2FF]"
                           : "bg-zinc-700/60"
                       }`}
                       style={{ height: `${value * 100}%` }}
@@ -212,25 +212,39 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
       </div>
 
       {/* 2. UNISON CHORUS ENGINE (3 Cols) */}
-      <div className="lg:col-span-3 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="unison-section">
+      <div className="lg:col-span-3 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="unison-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-3">
-            <span className="text-xs uppercase font-display font-bold text-violet-400 tracking-wider flex items-center gap-1.5">
-              <Orbit className="w-4 h-4 animate-spin-slow" />
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Orbit className="w-3.5 h-3.5 text-[#00F2FF] animate-spin-slow" />
               Unison Engine
             </span>
             <span className="text-[10px] font-mono text-zinc-500">CHORUS</span>
           </div>
 
-          <p className="text-[10px] text-zinc-500 font-mono mb-4 leading-normal">
-            Clones multiple frequency-offset voice oscillators per note to create wide spatialized fatness.
-          </p>
+          {/* Voices visualizer bar-grid from design specs */}
+          <div className="space-y-2 mb-4 bg-black p-3 rounded border border-zinc-850">
+            <div className="flex justify-between items-center">
+              <span className="text-[9px] font-mono text-zinc-400">UNISON VOICES</span>
+              <span className="text-[10px] font-mono text-[#00F2FF] font-bold">{params.unisonVoices}</span>
+            </div>
+            <div className="grid grid-cols-8 gap-1">
+              {[...Array(16)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-3 rounded-sm transition-colors duration-150 ${
+                    i < params.unisonVoices ? "bg-[#00F2FF] shadow-[0_0_4px_#00F2FF]" : "bg-zinc-850"
+                  }`} 
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Unison parameters */}
-        <div className="flex flex-col gap-3 justify-center items-center">
-          <div className="grid grid-cols-3 gap-2 w-full justify-items-center">
+        <div className="flex flex-col gap-3 justify-center items-center pt-2 border-t border-zinc-800/50">
+          <div className="grid grid-cols-3 gap-1 w-full justify-items-center">
             <Knob
               id="knob-unison-voices"
               label="Voices"
@@ -238,7 +252,7 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
               min={1}
               max={16}
               step={1}
-              color="violet"
+              color="cyan"
               onChange={(val) => onChange({ unisonVoices: val })}
             />
             <Knob
@@ -248,53 +262,52 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
               min={0}
               max={100}
               step={1}
-              color="violet"
+              color="cyan"
               unit="¢"
               onChange={(val) => onChange({ unisonDetune: val })}
             />
             <Knob
               id="knob-unison-spread"
-              label="Stereo Spread"
+              label="Spread"
               value={params.unisonSpread}
               min={0}
               max={100}
               step={1}
-              color="violet"
+              color="cyan"
               unit="%"
               onChange={(val) => onChange({ unisonSpread: val })}
             />
-          </div>
-          <div className="w-full text-center text-[9px] font-mono text-violet-400/80 mt-1">
-            {params.unisonVoices === 1
-              ? "Monophonic Voice"
-              : `${params.unisonVoices} Active Unison Voices`}
           </div>
         </div>
       </div>
 
       {/* 3. AUX OSCILLATORS - SUB & NOISE (2 Cols) */}
-      <div className="lg:col-span-2 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800/80 flex flex-col justify-between" id="aux-section">
+      <div className="lg:col-span-2 bg-[#141517] rounded-lg p-4 border border-zinc-800 flex flex-col justify-between" id="aux-section">
         <div>
           {/* Header */}
           <div className="flex justify-between items-center mb-3">
-            <span className="text-xs uppercase font-display font-bold text-orange-400 tracking-wider flex items-center gap-1.5">
-              <Volume2 className="w-4 h-4" />
-              Aux Mix
+            <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Volume2 className="w-3.5 h-3.5 text-[#FF3E00]" />
+              Sub / Noise
             </span>
-            <span className="text-[10px] font-mono text-zinc-500">SUB/NOISE</span>
+            <span className="text-[10px] font-mono text-zinc-500">MIX</span>
           </div>
 
           {/* Sub Oscillator config */}
           <div className="mb-4">
-            <span className="text-[9px] font-mono text-zinc-400 block mb-1 uppercase tracking-wider">Sub Oscillator</span>
-            <div className="grid grid-cols-4 bg-zinc-950 p-0.5 rounded border border-zinc-800/80 mb-2 text-[8px] font-mono text-zinc-400">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-wider">Sub Osc</span>
+              <span className="text-[9px] font-mono bg-[#00F2FF22] text-[#00F2FF] px-1 rounded">{params.subOscType.toUpperCase()}</span>
+            </div>
+            
+            <div className="grid grid-cols-4 bg-black p-0.5 rounded border border-zinc-800 mb-2 text-[8px] font-mono text-zinc-400">
               {subTypes.map((type) => (
                 <button
                   key={type}
                   id={`sub-type-${type.toLowerCase()}`}
-                  className={`py-1 rounded text-center ${
+                  className={`py-1 rounded text-center cursor-pointer ${
                     params.subOscType === type
-                      ? "bg-orange-500/10 text-orange-400 font-bold"
+                      ? "bg-[#FF3E00]/10 text-[#FF3E00] font-bold"
                       : "hover:text-zinc-200"
                   }`}
                   onClick={() => onChange({ subOscType: type })}
@@ -306,13 +319,13 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
 
             {/* Octave selection */}
             {params.subOscType !== "Off" && (
-              <div className="flex gap-1 justify-between items-center bg-zinc-950/80 p-1.5 rounded border border-zinc-900 text-[8px] font-mono text-zinc-400">
+              <div className="flex gap-1 justify-between items-center bg-black p-1.5 rounded border border-zinc-850 text-[8px] font-mono text-zinc-400">
                 <span>Octave</span>
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded p-0.5">
                   <button
                     id="sub-octave-minus1"
-                    className={`px-1.5 py-0.5 rounded ${
-                      params.subOctave === -1 ? "bg-orange-400 text-black font-bold" : ""
+                    className={`px-1.5 py-0.5 rounded cursor-pointer ${
+                      params.subOctave === -1 ? "bg-[#FF3E00] text-black font-bold" : ""
                     }`}
                     onClick={() => onChange({ subOctave: -1 })}
                   >
@@ -320,8 +333,8 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
                   </button>
                   <button
                     id="sub-octave-minus2"
-                    className={`px-1.5 py-0.5 rounded ${
-                      params.subOctave === -2 ? "bg-orange-400 text-black font-bold" : ""
+                    className={`px-1.5 py-0.5 rounded cursor-pointer ${
+                      params.subOctave === -2 ? "bg-[#FF3E00] text-black font-bold" : ""
                     }`}
                     onClick={() => onChange({ subOctave: -2 })}
                   >
@@ -334,11 +347,14 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
 
           {/* Noise config */}
           <div className="mb-2">
-            <span className="text-[9px] font-mono text-zinc-400 block mb-1 uppercase tracking-wider">Noise Color</span>
-            <div className="flex bg-zinc-950 p-0.5 rounded border border-zinc-800/80 text-[8px] font-mono text-zinc-400">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-wider">Noise Gen</span>
+              <span className="text-[9px] font-mono bg-white/10 text-white px-1 rounded">{params.noiseColor.toUpperCase()}</span>
+            </div>
+            <div className="flex bg-black p-0.5 rounded border border-zinc-800 text-[8px] font-mono text-zinc-400">
               <button
                 id="noise-color-white"
-                className={`flex-1 py-1 rounded text-center transition-colors ${
+                className={`flex-1 py-1 rounded text-center transition-colors cursor-pointer ${
                   params.noiseColor === "white" ? "bg-zinc-800 text-white font-bold" : "hover:text-zinc-200"
                 }`}
                 onClick={() => onChange({ noiseColor: "white" })}
@@ -347,7 +363,7 @@ export default function OscillatorControls({ params, onChange }: OscillatorContr
               </button>
               <button
                 id="noise-color-pink"
-                className={`flex-1 py-1 rounded text-center transition-colors ${
+                className={`flex-1 py-1 rounded text-center transition-colors cursor-pointer ${
                   params.noiseColor === "pink" ? "bg-pink-500/10 text-pink-400 font-bold" : "hover:text-zinc-200"
                 }`}
                 onClick={() => onChange({ noiseColor: "pink" })}

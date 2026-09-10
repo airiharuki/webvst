@@ -126,27 +126,31 @@ export default function Knob({
   const colorMap = {
     cyan: {
       track: "stroke-zinc-800",
-      active: "stroke-cyan-400",
-      text: "text-cyan-400",
-      glow: "drop-shadow-[0_0_3px_rgba(34,211,238,0.5)]"
+      active: "stroke-[#00F2FF]",
+      text: "text-[#00F2FF]",
+      glow: "drop-shadow-[0_0_4px_#00F2FF]",
+      indicator: "bg-[#00F2FF] shadow-[0_0_4px_#00F2FF]"
     },
     violet: {
       track: "stroke-zinc-800",
-      active: "stroke-violet-400",
-      text: "text-violet-400",
-      glow: "drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]"
+      active: "stroke-[#00F2FF]", // mapped to cyan for SPECTRA.OSC layout
+      text: "text-[#00F2FF]",
+      glow: "drop-shadow-[0_0_4px_#00F2FF]",
+      indicator: "bg-[#00F2FF] shadow-[0_0_4px_#00F2FF]"
     },
     orange: {
       track: "stroke-zinc-800",
-      active: "stroke-orange-400",
-      text: "text-orange-400",
-      glow: "drop-shadow-[0_0_3px_rgba(251,146,60,0.5)]"
+      active: "stroke-[#FF3E00]", // neon red
+      text: "text-[#FF3E00]",
+      glow: "drop-shadow-[0_0_4px_#FF3E00]",
+      indicator: "bg-[#FF3E00] shadow-[0_0_4px_#FF3E00]"
     },
     emerald: {
       track: "stroke-zinc-800",
-      active: "stroke-emerald-400",
-      text: "text-emerald-400",
-      glow: "drop-shadow-[0_0_3px_rgba(52,211,153,0.5)]"
+      active: "stroke-[#FF3E00]", // neon red for state variable filter
+      text: "text-[#FF3E00]",
+      glow: "drop-shadow-[0_0_4px_#FF3E00]",
+      indicator: "bg-[#FF3E00] shadow-[0_0_4px_#FF3E00]"
     }
   };
 
@@ -198,18 +202,18 @@ export default function Knob({
           />
         </svg>
 
-        {/* Inner Solid Metallic Dial Cap */}
+        {/* Inner Solid Metallic Dial Cap - SPECTRA.OSC look */}
         <div 
-          className="absolute w-9 h-9 rounded-full bg-gradient-to-b from-zinc-700 to-zinc-900 border border-zinc-950 flex items-center justify-center shadow-lg group-hover:from-zinc-600 group-hover:to-zinc-800 transition-colors"
+          className="absolute w-9 h-9 rounded-full bg-[#0A0A0B] border-2 border-zinc-700 flex items-center justify-center shadow-lg group-hover:border-zinc-500 transition-colors"
           style={{ transform: `rotate(${currentAngle}deg)` }}
         >
-          {/* Indicator Dot/Line */}
-          <div className="absolute top-1 w-0.5 h-2.5 bg-white/90 rounded-full shadow-[0_0_2px_rgba(255,255,255,0.8)]" />
+          {/* Indicator Dot/Line matching active channel color */}
+          <div className={`absolute top-1.5 w-1 h-3 rounded-full origin-bottom ${colors.indicator}`} />
         </div>
       </div>
 
       {/* Label Text */}
-      <span className="text-[10px] font-medium text-zinc-400 mt-1 uppercase tracking-wider font-sans">
+      <span className="text-[9px] font-bold text-zinc-500 mt-1.5 uppercase tracking-[0.1em] font-sans">
         {label}
       </span>
 

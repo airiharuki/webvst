@@ -41,11 +41,11 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
       const height = rect.height;
 
       // Clear with dark, slightly translucent slate color for beautiful trail motion-blur
-      ctx.fillStyle = "rgba(11, 11, 16, 0.25)";
+      ctx.fillStyle = "rgba(10, 10, 11, 0.25)";
       ctx.fillRect(0, 0, width, height);
 
       // Draw subtle grid lines like a professional hardware oscilloscope
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
       ctx.lineWidth = 1;
       
       // Vertical grid
@@ -67,7 +67,7 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
       }
 
       // Draw center-line
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
       ctx.beginPath();
       ctx.moveTo(0, height / 2);
       ctx.lineTo(width, height / 2);
@@ -90,18 +90,18 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
             const percent = freqDataArray[i] / 255;
             const barHeight = percent * height * 0.75;
 
-            // Generate gradient for frequencies (cyan to violet)
+            // Generate gradient for frequencies (cyan to red)
             const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
-            gradient.addColorStop(0, "rgba(6, 182, 212, 0.02)");
-            gradient.addColorStop(0.5, "rgba(139, 92, 246, 0.3)");
-            gradient.addColorStop(1, "rgba(139, 92, 246, 0.75)");
+            gradient.addColorStop(0, "rgba(0, 242, 255, 0.02)");
+            gradient.addColorStop(0.5, "rgba(0, 242, 255, 0.3)");
+            gradient.addColorStop(1, "rgba(255, 62, 0, 0.75)");
 
             ctx.fillStyle = gradient;
             ctx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
 
             // Subtle glowing caps on frequency peaks
             if (barHeight > 4) {
-              ctx.fillStyle = "rgba(167, 139, 250, 0.85)";
+              ctx.fillStyle = "rgba(0, 242, 255, 0.85)";
               ctx.fillRect(x, height - barHeight, barWidth - 1, 1.5);
             }
 
@@ -115,9 +115,9 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
           ctx.lineWidth = 2.5;
 
           // Glowing stroke color (cyan)
-          ctx.strokeStyle = "rgb(34, 211, 238)";
+          ctx.strokeStyle = "rgb(0, 242, 255)";
           ctx.shadowBlur = 8;
-          ctx.shadowColor = "rgba(6, 182, 212, 0.5)";
+          ctx.shadowColor = "rgba(0, 242, 255, 0.5)";
 
           const sliceWidth = width / bufferLength;
           let x = 0;
@@ -152,7 +152,7 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
         }
       } else {
         // Draw static standby waves when synth is idle / uninitialized
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.strokeStyle = "rgba(0, 242, 255, 0.15)";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         const nowMs = Date.now() * 0.005;
@@ -163,10 +163,10 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
         }
         ctx.stroke();
 
-        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.fillStyle = "rgba(0, 242, 255, 0.4)";
         ctx.font = "10px monospace";
         ctx.textAlign = "center";
-        ctx.fillText("SYNTH IDLE • PRESS ANY KEY TO START AUDIO", width / 2, height - 12);
+        ctx.fillText("SYNTH IDLE • PRESS ANY KEY TO INITIALIZE AUDIO ENGINE", width / 2, height - 12);
       }
 
       animationRef.current = requestAnimationFrame(draw);
@@ -183,21 +183,21 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
   }, [audioEngine, visualMode]);
 
   return (
-    <div className="relative w-full h-44 bg-zinc-950/90 rounded-lg overflow-hidden border border-zinc-800/80 shadow-inner flex flex-col justify-between p-2">
+    <div className="relative w-full h-44 bg-black rounded-lg overflow-hidden border border-zinc-800 shadow-inner flex flex-col justify-between p-2">
       {/* Top Header Controls */}
       <div className="flex justify-between items-center z-10 px-2 pointer-events-auto">
         <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono flex items-center gap-1.5 font-bold">
-          <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+          <Activity className="w-3.5 h-3.5 text-[#00F2FF] animate-pulse" />
           Real-time Master DSP Waveforms
         </span>
 
         {/* Display Mode Selection */}
-        <div className="flex bg-zinc-900/90 border border-zinc-800/80 p-0.5 rounded-md text-[10px] font-mono font-medium text-zinc-400">
+        <div className="flex bg-black border border-zinc-800 p-0.5 rounded text-[10px] font-mono font-medium text-zinc-400">
           <button
             id="vis-mode-oscilloscope"
-            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all ${
+            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
               visualMode === "oscilloscope"
-                ? "bg-cyan-500/10 text-cyan-400 font-bold border border-cyan-500/25"
+                ? "bg-[#00F2FF]/10 text-[#00F2FF] font-bold border border-[#00F2FF]/20 shadow-[0_0_8px_#00F2FF33]"
                 : "hover:text-zinc-200 border border-transparent"
             }`}
             onClick={() => setVisualMode("oscilloscope")}
@@ -207,9 +207,9 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
           </button>
           <button
             id="vis-mode-spectrum"
-            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all ${
+            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
               visualMode === "spectrum"
-                ? "bg-violet-500/10 text-violet-400 font-bold border border-violet-500/25"
+                ? "bg-[#FF3E00]/10 text-[#FF3E00] font-bold border border-[#FF3E00]/20 shadow-[0_0_8px_#FF3E0033]"
                 : "hover:text-zinc-200 border border-transparent"
             }`}
             onClick={() => setVisualMode("spectrum")}
@@ -219,9 +219,9 @@ export default function WaveVisualizer({ audioEngine }: WaveVisualizerProps) {
           </button>
           <button
             id="vis-mode-dual"
-            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all ${
+            className={`px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer ${
               visualMode === "dual"
-                ? "bg-white/10 text-white font-bold border border-white/10"
+                ? "bg-[#00F2FF]/10 text-[#00F2FF] font-bold border border-[#00F2FF]/20"
                 : "hover:text-zinc-200 border border-transparent"
             }`}
             onClick={() => setVisualMode("dual")}

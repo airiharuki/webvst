@@ -175,20 +175,20 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-zinc-100 font-sans p-3 sm:p-6 flex flex-col justify-between select-none">
+    <div className="min-h-screen bg-[#0A0A0B] text-zinc-100 font-sans p-3 sm:p-6 flex flex-col justify-between select-none">
       
       {/* HEADER SECTION */}
-      <header className="max-w-7xl w-full mx-auto mb-4 flex flex-col md:flex-row justify-between items-center bg-zinc-900/40 border border-zinc-900 rounded-xl px-4 py-3 gap-3">
+      <header className="max-w-7xl w-full mx-auto mb-4 flex flex-col md:flex-row justify-between items-center bg-[#141517] border border-zinc-800 rounded p-4 py-3 gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-cyan-400 to-violet-500 rounded-lg shadow-lg">
-            <AudioLines className="w-5 h-5 text-neutral-950 animate-pulse" />
+          <div className="p-2.5 bg-[#00F2FF]/10 rounded border border-[#00F2FF]/30 shadow-[0_0_8px_#00F2FF33]">
+            <AudioLines className="w-5 h-5 text-[#00F2FF] animate-pulse" />
           </div>
           <div>
-            <h1 className="text-sm font-display font-bold uppercase tracking-wider text-white">
-              Generative Web Synth
+            <h1 className="text-sm font-bold uppercase tracking-[0.25em] text-[#00F2FF] drop-shadow-[0_0_8px_#00F2FF44]">
+              SPECTRA.OSC
             </h1>
-            <p className="text-[10px] font-mono text-zinc-400">
-              VITAL/SERUM ARCHITECTURE • WEB AUDIO DSP ENGINE
+            <p className="text-[9px] font-mono text-zinc-500 tracking-wide">
+              WAVETABLE & SPECTRAL SYNTHESIS • WEB AUDIO DSP
             </p>
           </div>
         </div>
@@ -196,11 +196,11 @@ export default function App() {
         {/* Global Controls Row (Presets, Panic, Manual) */}
         <div className="flex items-center gap-3 flex-wrap justify-center">
           {/* Preset Dropdown */}
-          <div className="flex items-center gap-2 bg-zinc-950/80 border border-zinc-800/80 p-1.5 rounded-lg">
+          <div className="flex items-center gap-2 bg-black border border-zinc-800 p-1.5 rounded">
             <span className="text-[10px] font-mono text-zinc-500 uppercase px-1">Preset:</span>
             <select
               id="preset-selector"
-              className="bg-zinc-900 border border-zinc-800 text-xs font-mono font-medium text-zinc-200 rounded px-2 py-1 focus:outline-none focus:border-cyan-500 transition-colors"
+              className="bg-[#141517] border border-zinc-800 text-[10.5px] font-mono text-zinc-300 rounded px-2 py-1 focus:outline-none focus:border-[#00F2FF] transition-colors cursor-pointer"
               value={activePresetId}
               onChange={(e) => handlePresetSelect(e.target.value)}
             >
@@ -214,18 +214,18 @@ export default function App() {
           </div>
 
           {/* Master Volume */}
-          <div className="flex items-center gap-2 bg-zinc-950/80 border border-zinc-800/80 px-2 py-1 rounded-lg">
+          <div className="flex items-center gap-2 bg-black border border-zinc-800 px-3 py-1.5 rounded">
             {synthParams.masterVolume === 0 ? (
               <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5 text-cyan-400" />
+              <Volume2 className="w-3.5 h-3.5 text-[#00F2FF]" />
             )}
             <input
               id="slider-master-volume"
               type="range"
               min="0"
               max="100"
-              className="w-16 h-1 bg-zinc-850 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+              className="w-16 h-1 bg-zinc-900 rounded appearance-none cursor-pointer accent-[#00F2FF]"
               value={synthParams.masterVolume}
               onChange={(e) => handleSynthParamChange({ masterVolume: parseInt(e.target.value) })}
             />
@@ -238,7 +238,7 @@ export default function App() {
           <button
             id="panic-btn"
             onClick={handlePanic}
-            className="flex items-center gap-1 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-[10px] font-mono font-bold rounded-lg transition-all uppercase tracking-wide"
+            className="flex items-center gap-1 px-3 py-1.5 bg-[#FF3E00]/10 hover:bg-[#FF3E00]/20 border border-[#FF3E00]/30 text-[#FF3E00] text-[10px] font-mono font-bold rounded transition-all uppercase tracking-wide cursor-pointer"
             title="Silence all active nodes"
           >
             <RotateCcw className="w-3 h-3" />
@@ -249,10 +249,10 @@ export default function App() {
           <button
             id="manual-btn"
             onClick={() => setShowManual(!showManual)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-[10px] font-mono transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 border rounded text-[10px] font-mono transition-all cursor-pointer ${
               showManual 
-                ? "bg-cyan-500/15 text-cyan-400 border-cyan-500/40 shadow-[0_0_8px_rgba(6,182,212,0.15)]" 
-                : "bg-zinc-950/80 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                ? "bg-[#00F2FF]/15 text-[#00F2FF] border-[#00F2FF]/40 shadow-[0_0_8px_#00F2FF33]" 
+                : "bg-black border-zinc-800 text-zinc-400 hover:text-zinc-200"
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
@@ -263,25 +263,25 @@ export default function App() {
 
       {/* WEB AUDIO INITIALIZER OVERLAY (Bypasses Chrome/Safari gesture lock) */}
       {audioState === "uninitialized" && (
-        <section className="max-w-7xl w-full mx-auto mb-4 bg-gradient-to-r from-cyan-950/30 to-violet-950/30 border border-cyan-500/20 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-3 shadow-lg">
+        <section className="max-w-7xl w-full mx-auto mb-4 bg-[#141517] border border-[#00F2FF]/30 shadow-[0_0_15px_#00F2FF11] rounded p-4 flex flex-col md:flex-row justify-between items-center gap-3">
           <div className="flex items-center gap-3">
-            <Cpu className="w-6 h-6 text-cyan-400 animate-bounce" />
+            <Cpu className="w-6 h-6 text-[#00F2FF] animate-bounce" />
             <div>
               <h2 className="text-xs font-display font-bold uppercase tracking-wide text-zinc-200">
                 Audio Engine Suspended
               </h2>
               <p className="text-[10px] font-mono text-zinc-400">
-                Browsers prevent background audio. Click the activator to launch the DSP voice cluster.
+                Web browsers require user gestures to enable synthesized audio. Click activate to boot the real-time DSP core.
               </p>
             </div>
           </div>
           <button
             id="audio-initializer-btn"
             onClick={ensureEngineInit}
-            className="px-5 py-2.5 bg-cyan-400 text-black text-xs font-display font-bold uppercase tracking-wider rounded-lg shadow-lg hover:bg-cyan-300 transition-all flex items-center gap-2"
+            className="px-5 py-2.5 bg-[#00F2FF] text-black text-xs font-display font-bold uppercase tracking-wider rounded shadow-lg hover:bg-cyan-300 transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_12px_#00F2FF]"
           >
             <Power className="w-3.5 h-3.5 stroke-[2.5px]" />
-            Activate DSP Engine
+            Activate DSP Core
           </button>
         </section>
       )}
@@ -321,17 +321,17 @@ export default function App() {
       {/* USER MANUAL MODAL WINDOW */}
       {showManual && (
         <div className="fixed inset-0 bg-black/80 backdrop-filter backdrop-blur-md flex items-center justify-center z-50 p-4 select-text">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 max-w-xl w-full shadow-2xl relative max-h-[85vh] overflow-y-auto">
+          <div className="bg-[#141517] border border-zinc-800 rounded p-6 max-w-xl w-full shadow-2xl relative max-h-[85vh] overflow-y-auto">
             <button
               id="close-manual-btn"
               onClick={() => setShowManual(false)}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 font-mono text-sm border border-zinc-800/80 rounded px-2 py-0.5 hover:bg-zinc-900 transition-colors"
+              className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 font-mono text-sm border border-zinc-800/80 rounded px-2 py-0.5 hover:bg-zinc-900 transition-colors cursor-pointer"
             >
               ✕
             </button>
             
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-zinc-900">
-              <Info className="w-5 h-5 text-cyan-400" />
+              <Info className="w-5 h-5 text-[#00F2FF]" />
               <h3 className="text-sm font-display font-bold uppercase tracking-wider text-white">
                 Synth Reference & Guide
               </h3>
@@ -340,7 +340,7 @@ export default function App() {
             <div className="space-y-4 text-xs font-mono text-zinc-400 leading-relaxed">
               <div>
                 <h4 className="text-zinc-200 font-bold mb-1 uppercase tracking-wide text-[11px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#00F2FF] rounded-full" />
                   Synthesis Architecture
                 </h4>
                 <p>
@@ -350,18 +350,18 @@ export default function App() {
 
               <div>
                 <h4 className="text-zinc-200 font-bold mb-1 uppercase tracking-wide text-[11px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#00F2FF] rounded-full" />
                   Additive Synthesis & Spectral Morphing
                 </h4>
                 <p>
-                  Under <strong className="text-cyan-400">Wavetable</strong> or <strong className="text-cyan-400">Spectral</strong> modes, you can draw/paint 16 independent harmonic sliders to construct custom waveforms in real time. 
-                  The <strong className="text-violet-400">Spectral Morph</strong> knob applies dynamic frequency-shifting comb filters and odd-harmonic clipping profiles, creating glassy, mutating digital tones.
+                  Under <strong className="text-[#00F2FF]">Wavetable</strong> or <strong className="text-[#00F2FF]">Spectral</strong> modes, you can draw/paint 16 independent harmonic sliders to construct custom waveforms in real time. 
+                  The <strong className="text-[#00F2FF]">Spectral Morph</strong> knob applies dynamic frequency-shifting comb filters and odd-harmonic clipping profiles, creating glassy, mutating digital tones.
                 </p>
               </div>
 
               <div>
                 <h4 className="text-zinc-200 font-bold mb-1 uppercase tracking-wide text-[11px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-orange-400 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#FF3E00] rounded-full" />
                   Unison Voice Multiplier
                 </h4>
                 <p>
@@ -371,21 +371,21 @@ export default function App() {
 
               <div>
                 <h4 className="text-zinc-200 font-bold mb-1 uppercase tracking-wide text-[11px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#FF3E00] rounded-full" />
                   Filter & Drive
                 </h4>
                 <p>
-                  A State Variable Filter (SVF) with Lowpass, Highpass, Bandpass, and Notch routing. Modulate the cutoff frequency using the Filter Envelope slider, and add analog saturation warmth using the <strong className="text-emerald-400">Drive</strong> (hyperbolic wave-clipping) node.
+                  A State Variable Filter (SVF) with Lowpass, Highpass, Bandpass, and Notch routing. Modulate the cutoff frequency using the Filter Envelope slider, and add analog saturation warmth using the <strong className="text-[#FF3E00]">Drive</strong> (hyperbolic wave-clipping) node.
                 </p>
               </div>
 
               <div>
                 <h4 className="text-zinc-200 font-bold mb-1 uppercase tracking-wide text-[11px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#00F2FF] rounded-full" />
                   Algorithmic Sequencer
                 </h4>
                 <p>
-                  Configure BPM, Root Key, Scale, and Pattern (Arpeggios, Chords, runs) then press <strong className="text-violet-400">Play Sequence</strong>. The generative engine automatically triggers rich chords, melodies, and ambient soundscapes.
+                  Configure BPM, Root Key, Scale, and Pattern (Arpeggios, Chords, runs) then press <strong className="text-[#00F2FF]">Play Sequence</strong>. The generative engine automatically triggers rich chords, melodies, and ambient soundscapes.
                 </p>
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function App() {
               <button
                 id="manual-ok-btn"
                 onClick={() => setShowManual(false)}
-                className="px-6 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-xs font-mono font-bold text-white transition-colors"
+                className="px-6 py-2 bg-black hover:bg-zinc-900 border border-zinc-800 rounded text-xs font-mono font-bold text-white transition-colors cursor-pointer"
               >
                 Dismiss Guide
               </button>
@@ -405,9 +405,9 @@ export default function App() {
 
       {/* FOOTER BRUTALIST SIGNATURE */}
       <footer className="max-w-7xl w-full mx-auto mt-6 flex justify-between items-center text-[10px] font-mono text-zinc-600 border-t border-zinc-900/60 pt-4">
-        <span>VITAL-WEB-SYNTH-ENGINE • REV 4.2</span>
+        <span>SPECTRA.OSC SYSTEM ENGINE • REV 4.2</span>
         <span className="flex items-center gap-1 text-zinc-500 font-bold">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-500/60" />
+          <Sparkles className="w-3.5 h-3.5 text-[#00F2FF]" />
           POLYPHONIC ADDITIVE SYNTHESIZER
         </span>
         <span>CTRL-HZ COMPLIANT</span>

@@ -7,28 +7,31 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-/* Custom glow and glass effects for a premium VST look */
+/* SPECTRA.OSC Theme Styles */
 .vst-panel {
-  background: rgba(18, 18, 24, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  background: #141517;
+  border: 1px solid #27272a; /* border-zinc-800 */
+  border-radius: 0.5rem; /* rounded-lg */
 }
 
 .vst-border {
-  border-color: rgba(255, 255, 255, 0.06);
+  border-color: #27272a; /* border-zinc-800 */
 }
 
 .vst-glow-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 12px rgba(0, 242, 255, 0.35);
 }
 
-.vst-glow-violet {
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+.vst-glow-red {
+  box-shadow: 0 0 12px rgba(255, 62, 0, 0.35);
 }
 
-.vst-glow-orange {
-  box-shadow: 0 0 15px rgba(249, 115, 22, 0.2);
+.glow-text-cyan {
+  text-shadow: 0 0 8px rgba(0, 242, 255, 0.5);
+}
+
+.glow-text-red {
+  text-shadow: 0 0 8px rgba(255, 62, 0, 0.5);
 }
 
 /* Custom scrollbars for a clean dark look */
@@ -37,13 +40,13 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: #0A0A0B;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: #27272a;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #3f3f46;
 }
 
