@@ -50,8 +50,8 @@ Getting the project running locally takes less than two minutes:
 
 1. **Fork & Clone** the repository:
    ```bash
-   git clone https://github.com/your-username/spectra-osc.git
-   cd spectra-osc
+   git clone https://github.com/airiharuki/webvst.git
+   cd webvst
    ```
 
 2. **Install Dependencies**:

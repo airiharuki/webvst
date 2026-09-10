@@ -119,8 +119,8 @@ Want to run it locally, inspect the code, or add your own modular synthesis bloc
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/spectra-osc.git
-cd spectra-osc
+git clone https://github.com/airiharuki/webvst.git
+cd webvst
 
 # 2. Install dependencies
 npm install
